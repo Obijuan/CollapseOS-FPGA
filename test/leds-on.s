@@ -1,0 +1,3 @@
+ld	A, 0xAA
+out	(0x40), A
+halt
