@@ -20,6 +20,8 @@ serInit:
 ; These function below follow the blockdev API.
 
 serGetC:
+  ;--- No data available
+  call	unsetZ
   ret
 
 

@@ -8,16 +8,20 @@
 .equ  SER_IO    0x10   ;-- Uart: Registro de datos
 
   ;-- Arranca en la direccion 0
-  jr init
+  jp init
 
 ;-- Interrupciones aqui... si las hubiese
 
 
-;-- Carga de modulos
+;-------- Carga de modulos
 .inc "err.h"
+.inc "core.asm"
 
 .equ	SER_RAMSTART	RAMSTART
 .inc "ser.asm"
+
+.equ	STDIO_RAMSTART	SER_RAMEND
+.inc "stdio.asm"
 
   ;-- Inicializacion
 init:
@@ -29,14 +33,15 @@ init:
   ;-- Inicializacion de modulos
   call	serInit
 
-  jp mainLoop
-
+  ld	hl, serGetC
+	ld	de, serPutC
+	call	stdioInit
 
   ;-- Bucle principal
 mainLoop:
 
-    ld A, 0x42
-    call serPutC
+    ld hl, .caca
+    call printstr
 
     ;-- Sacar un valor por A
     ;-- Prueba de que la pila va bien
@@ -44,6 +49,9 @@ mainLoop:
     call showleds
 
     halt
+
+.caca:
+  	.db	"Hola", ASCII_CR, ASCII_LF, 0
 
 ;-- Mostrar por los LEDs el registro A
 showleds:
