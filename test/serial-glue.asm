@@ -1,7 +1,7 @@
 ;-- Vamos a dividir el soc FPGA en 8K ROM + 8K RAM
 ;-- ROM: 0000 - 1FFF
 ;-- RAM: 2000 - 3FFF
-.equ	RAMSTART	0x2000
+.equ	RAMSTART	0x0400
 .equ	RAMEND		0x3FFF
 .equ  LEDS      0x40   ;-- Puerto de salida: LEDs
 .equ  SER_CTL   0x11   ;-- Uart: Registro de estado
@@ -16,12 +16,17 @@
 ;-------- Carga de modulos
 .inc "err.h"
 .inc "core.asm"
+.inc "parse.asm"
 
 .equ	SER_RAMSTART	RAMSTART
 .inc "ser.asm"
 
 .equ	STDIO_RAMSTART	SER_RAMEND
 .inc "stdio.asm"
+
+.equ	SHELL_RAMSTART	STDIO_RAMEND
+.equ	SHELL_EXTRA_CMD_COUNT 0
+.inc "shell.asm"
 
   ;-- Inicializacion
 init:
@@ -36,26 +41,13 @@ init:
   ld	hl, serGetC
 	ld	de, serPutC
 	call	stdioInit
+  call	shellInit
 
-  ;-- Bucle principal
-mainLoop:
+  ;ld A, 0xF0
+  ;call showleds
 
-    ld hl, .caca
-    call printstr
-.wait:
-    call serGetC
-    jr nz, .wait
-    call stdioPutC
+	jp	shellLoop
 
-    ;-- Sacar un valor por A
-    ;-- Prueba de que la pila va bien
-    ;ld A, 0xAA
-    call showleds
-
-    jr mainLoop
-
-.caca:
-  	.db	"Hola", ASCII_CR, ASCII_LF, 0
 
 ;-- Mostrar por los LEDs el registro A
 showleds:
