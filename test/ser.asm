@@ -20,8 +20,20 @@ serInit:
 ; These function below follow the blockdev API.
 
 serGetC:
+  in A, (SER_CTL)
+  and 0x2
+  jr z, .nothingToRead ;-- No hay dato
+
+  ;-- Leer el caracter que ha llegado
+  in A, (SER_IO)
+
+  cp	a		; ensure Z
+	jr	.end
+
   ;--- No data available
-  call	unsetZ
+.nothingToRead:
+	call	unsetZ
+.end:
   ret
 
 

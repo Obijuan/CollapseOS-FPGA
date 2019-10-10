@@ -42,13 +42,17 @@ mainLoop:
 
     ld hl, .caca
     call printstr
+.wait:
+    call serGetC
+    jr nz, .wait
+    call stdioPutC
 
     ;-- Sacar un valor por A
     ;-- Prueba de que la pila va bien
-    ld A, 0xAA
+    ;ld A, 0xAA
     call showleds
 
-    halt
+    jr mainLoop
 
 .caca:
   	.db	"Hola", ASCII_CR, ASCII_LF, 0
