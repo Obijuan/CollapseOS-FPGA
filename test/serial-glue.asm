@@ -27,6 +27,7 @@ init:
   ld sp, hl
 
   ;-- Inicializacion de modulos
+  call	serInit
 
   jp mainLoop
 

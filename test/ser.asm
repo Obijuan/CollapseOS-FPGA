@@ -1,3 +1,27 @@
+;-- Serial module
+;-- Serial comunications, without interruptions
+
+; ** DEFINES
+; SER_CTL: IO port for the UART's control registers
+; SER_IO: IO port for the UART's data registers
+; SER_RAMSTART: Address at which UART-related variables should be stored in
+;                RAM.
+
+; *** CONSTS ***
+
+;*** VARIABLES
+.equ	SER_RAMEND SER_RAMSTART
+
+
+serInit:
+  ret
+
+; *** BLOCKDEV ***
+; These function below follow the blockdev API.
+
+serGetC:
+  ret
+
 
 serPutC:
   push AF
